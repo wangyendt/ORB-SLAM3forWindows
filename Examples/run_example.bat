@@ -7,6 +7,7 @@ if /i '%idx%'=='1' goto mono
 if /i '%idx%'=='2' goto monoimu
 if /i '%idx%'=='3' goto stereo
 if /i '%idx%'=='4' goto stereoimu
+if /i '%idx%'=='5' goto mate20_mono
 
 
 :mono
@@ -21,6 +22,10 @@ goto ask_quiting
 :stereoimu
 .\Stereo-Inertial\Release\stereo_inertial_euroc.exe ..\Vocabulary\ORBvoc.txt .\Stereo-Inertial\EuRoC.yaml D:\work\data\euroc\MH01 .\Stereo-Inertial\EuRoC_TimeStamps\MH01.txt dataset-MH01_stereoi
 goto ask_quiting
+:mate20_mono
+.\Android-Phone\Release\mono_android_mate20.exe ..\Vocabulary\ORBvoc.txt .\Android-Phone\mate20.yaml D:\work\data\phone_data\android\2022_07_25_15_33_52_slam .\Monocular\EuRoC_TimeStamps\MH01.txt dataset-MH01_mono
+goto ask_quiting
+
 
 :ask_quiting
 

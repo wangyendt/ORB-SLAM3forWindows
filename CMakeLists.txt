@@ -35,6 +35,8 @@ endif()
 
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
+set(OpenCV_DIR "D:/work/code/tools/opencv3.4.16/build")
+
 find_package(OpenCV 3)
 if(NOT OpenCV_FOUND)
    find_package(OpenCV 2.4.3 QUIET)
@@ -192,5 +194,12 @@ target_link_libraries(stereo_inertial_euroc ${PROJECT_NAME})
 add_executable(stereo_inertial_tum_vi
 Examples/Stereo-Inertial/stereo_inertial_tum_vi.cc)
 target_link_libraries(stereo_inertial_tum_vi ${PROJECT_NAME})
+
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Android-Phone)
+
+add_executable(mono_android_mate20
+Examples/Android-Phone/mono_android_mate20.cc)
+target_link_libraries(mono_android_mate20 ${PROJECT_NAME})
 
 
