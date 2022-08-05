@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(ORB_SLAM3)
 
 IF(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE Release)
+  SET(CMAKE_BUILD_TYPE Debug)
 ENDIF()
 
 MESSAGE("Build type: " ${CMAKE_BUILD_TYPE})
@@ -33,11 +33,14 @@ elseif(COMPILER_SUPPORTS_CXX0X)
 #   message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
+target_compile_definitions( ${PROJECT_NAME} PRIVATE COMPILEDWITHC11 )
+
+
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
 set(OpenCV_DIR "D:/work/code/tools/opencv3.4.16/build")
 
-find_package(OpenCV 3)
+find_package(OpenCV 3 REQUIRED)
 if(NOT OpenCV_FOUND)
    find_package(OpenCV 2.4.3 QUIET)
    if(NOT OpenCV_FOUND)
@@ -57,6 +60,7 @@ ${PROJECT_SOURCE_DIR}/include
 ${PROJECT_SOURCE_DIR}/include/CameraModels
 ${EIGEN3_INCLUDE_DIR}
 ${Pangolin_INCLUDE_DIRS}
+D:/work/code/tools/boost_1_79_0
 )
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
@@ -124,8 +128,9 @@ target_link_libraries(${PROJECT_NAME}
 ${OpenCV_LIBS}
 ${EIGEN3_LIBS}
 ${Pangolin_LIBRARIES}
-${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/Release/DBoW2.lib
-${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/Release/g2o.lib
+${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/${CMAKE_BUILD_TYPE}/DBoW2.lib
+${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/${CMAKE_BUILD_TYPE}/g2o.lib
+D:/work/code/tools/boost_1_79_0/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
 #-lboost_serialization
 #-lcrypto
 )

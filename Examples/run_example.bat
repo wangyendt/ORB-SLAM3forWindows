@@ -1,7 +1,7 @@
 @echo off
 
 :start
-set /p idx=请选择您要运行的任务（1. Mono; 2. MonoIMU; 3. Stereo; 4. Stereo IMU; 5. Custom Android）
+set /p idx=Please select the task you wanna run (1. Mono; 2. MonoIMU; 3. Stereo; 4. Stereo IMU; 5. Custom Android)
 
 if /i '%idx%'=='1' goto mono
 if /i '%idx%'=='2' goto monoimu
@@ -23,13 +23,14 @@ goto ask_quiting
 .\Stereo-Inertial\Release\stereo_inertial_euroc.exe ..\Vocabulary\ORBvoc.txt .\Stereo-Inertial\EuRoC.yaml D:\work\data\euroc\MH01 .\Stereo-Inertial\EuRoC_TimeStamps\MH01.txt dataset-MH01_stereoi
 goto ask_quiting
 :mate20_mono
-.\Android-Phone\Release\mono_android_mate20.exe ..\Vocabulary\ORBvoc.txt .\Android-Phone\mate20.yaml D:\work\data\phone_data\android\2022_07_25_15_33_52_slam .\Monocular\EuRoC_TimeStamps\MH01.txt dataset-MH01_mono
+set root="D:\work\data\phone_data\slam\2022_07_25_15_33_52_slam"
+.\Android-Phone\Release\mono_android_mate20.exe ..\Vocabulary\ORBvoc.txt .\Android-Phone\mate20.yaml %root% %root%\mav0\cam0\timestamp.txt dataset-android-mono
 goto ask_quiting
 
 
 :ask_quiting
 
-set /p res=是否退出程序？（1. 退出; 2. 重新运行）
+set /p res=Exit program? (1. exit 2. restart)
 if /i '%res%'=='1' goto end
 if /i '%res%'=='2' goto start
 
