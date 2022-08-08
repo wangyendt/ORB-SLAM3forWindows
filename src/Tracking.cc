@@ -295,7 +295,7 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
     }
     else
     {
-        int cols = 752;
+        int cols = 640;
         int rows = 480;
         cv::Mat R_l = cv::Mat::eye(3, 3, CV_32F);
     }
