@@ -197,7 +197,8 @@ int main(int argc, char **argv)
                 T = tframe-vTimestampsCam[seq][ni-1];
 
             if(ttrack<T)
-                usleep((T-ttrack)*1e6); // 1e6
+                // usleep((T - ttrack) * 1e6); // 1e6
+                Sleep((T - ttrack) * 1e3); // 1e3
 
         }
         if(seq < num_seq - 1)

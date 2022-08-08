@@ -44,3 +44,6 @@ cmake_modules/
 cmake-build-debug/
 
 *.pyc
+
+Release/
+Debug/

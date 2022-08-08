@@ -33,12 +33,9 @@ elseif(COMPILER_SUPPORTS_CXX0X)
 #   message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-target_compile_definitions( ${PROJECT_NAME} PRIVATE COMPILEDWITHC11 )
-
-
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
-set(OpenCV_DIR "D:/work/code/tools/opencv3.4.16/build")
+set(OpenCV_DIR $ENV{OPENCV3_PATH})
 
 find_package(OpenCV 3 REQUIRED)
 if(NOT OpenCV_FOUND)
@@ -60,12 +57,12 @@ ${PROJECT_SOURCE_DIR}/include
 ${PROJECT_SOURCE_DIR}/include/CameraModels
 ${EIGEN3_INCLUDE_DIR}
 ${Pangolin_INCLUDE_DIRS}
-D:/work/code/tools/boost_1_79_0
+$ENV{BOOST_PATH}
 )
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
-add_library(${PROJECT_NAME} SHARED
+add_library(${PROJECT_NAME} STATIC
 src/System.cc
 src/Tracking.cc
 src/LocalMapping.cc
@@ -130,81 +127,161 @@ ${EIGEN3_LIBS}
 ${Pangolin_LIBRARIES}
 ${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/${CMAKE_BUILD_TYPE}/DBoW2.lib
 ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/${CMAKE_BUILD_TYPE}/g2o.lib
-D:/work/code/tools/boost_1_79_0/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
 #-lboost_serialization
 #-lcrypto
 )
 
+if(MSVC)     
+    # Use the static C library for all build types
+    foreach(var 
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO
+      )
+      if(${var} MATCHES "/MD")
+        string(REGEX REPLACE "/MD" "/MT" ${var} "${${var}}")
+      endif()
+    endforeach()    
+endif(MSVC)
+
+target_compile_definitions( ${PROJECT_NAME} PRIVATE COMPILEDWITHC11 )
 
 # Build examples
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/RGB-D)
 add_executable(rgbd_tum
 Examples/RGB-D/rgbd_tum.cc)
-target_link_libraries(rgbd_tum ${PROJECT_NAME})
+target_compile_definitions( rgbd_tum PRIVATE COMPILEDWITHC11 )
+target_link_libraries(rgbd_tum 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
 
 add_executable(stereo_kitti
 Examples/Stereo/stereo_kitti.cc)
-target_link_libraries(stereo_kitti ${PROJECT_NAME})
+target_compile_definitions( stereo_kitti PRIVATE COMPILEDWITHC11 )
+target_link_libraries(stereo_kitti 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
 add_executable(stereo_euroc
 Examples/Stereo/stereo_euroc.cc)
-target_link_libraries(stereo_euroc ${PROJECT_NAME})
+target_compile_definitions( stereo_euroc PRIVATE COMPILEDWITHC11 )
+target_link_libraries(stereo_euroc 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
 add_executable(stereo_tum_vi
 Examples/Stereo/stereo_tum_vi.cc)
-target_link_libraries(stereo_tum_vi ${PROJECT_NAME})
+target_compile_definitions( stereo_tum_vi PRIVATE COMPILEDWITHC11 )
+target_link_libraries(stereo_tum_vi 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
 
 add_executable(mono_tum
 Examples/Monocular/mono_tum.cc)
-target_link_libraries(mono_tum ${PROJECT_NAME})
+target_compile_definitions( mono_tum PRIVATE COMPILEDWITHC11 )
+target_link_libraries(mono_tum 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
 add_executable(mono_kitti
 Examples/Monocular/mono_kitti.cc)
-target_link_libraries(mono_kitti ${PROJECT_NAME})
+target_compile_definitions( mono_kitti PRIVATE COMPILEDWITHC11 )
+target_link_libraries(mono_kitti 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
 add_executable(mono_euroc
 Examples/Monocular/mono_euroc.cc)
-target_link_libraries(mono_euroc ${PROJECT_NAME})
+target_compile_definitions( mono_euroc PRIVATE COMPILEDWITHC11 )
+target_link_libraries(mono_euroc 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
 add_executable(mono_tum_vi
 Examples/Monocular/mono_tum_vi.cc)
-target_link_libraries(mono_tum_vi ${PROJECT_NAME})
+target_compile_definitions( mono_tum_vi PRIVATE COMPILEDWITHC11 )
+target_link_libraries(mono_tum_vi 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular-Inertial)
 
 add_executable(mono_inertial_euroc
 Examples/Monocular-Inertial/mono_inertial_euroc.cc)
-target_link_libraries(mono_inertial_euroc ${PROJECT_NAME})
+target_compile_definitions( mono_inertial_euroc PRIVATE COMPILEDWITHC11 )
+target_link_libraries(mono_inertial_euroc 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
 add_executable(mono_inertial_tum_vi
 Examples/Monocular-Inertial/mono_inertial_tum_vi.cc)
-target_link_libraries(mono_inertial_tum_vi ${PROJECT_NAME})
+target_compile_definitions( mono_inertial_tum_vi PRIVATE COMPILEDWITHC11 )
+target_link_libraries(mono_inertial_tum_vi 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo-Inertial)
 
 add_executable(stereo_inertial_euroc
 Examples/Stereo-Inertial/stereo_inertial_euroc.cc)
-target_link_libraries(stereo_inertial_euroc ${PROJECT_NAME})
+target_compile_definitions( stereo_inertial_euroc PRIVATE COMPILEDWITHC11 )
+target_link_libraries(stereo_inertial_euroc 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
 
 add_executable(stereo_inertial_tum_vi
 Examples/Stereo-Inertial/stereo_inertial_tum_vi.cc)
-target_link_libraries(stereo_inertial_tum_vi ${PROJECT_NAME})
+target_compile_definitions( stereo_inertial_tum_vi PRIVATE COMPILEDWITHC11 )
+target_link_libraries(stereo_inertial_tum_vi 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Android-Phone)
 
 add_executable(mono_android_mate20
 Examples/Android-Phone/mono_android_mate20.cc)
-target_link_libraries(mono_android_mate20 ${PROJECT_NAME})
-
+target_compile_definitions( mono_android_mate20 PRIVATE COMPILEDWITHC11 )
+target_link_libraries(mono_android_mate20 
+${PROJECT_NAME}
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-sgd-x64-1_79.lib
+$ENV{BOOST_PATH}/stage/lib/libboost_serialization-vc143-mt-s-x64-1_79.lib
+)
 
